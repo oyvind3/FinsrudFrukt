@@ -1,4 +1,4 @@
-# Frukt Finsrud static fruit store
+# Finsrud Frukt static fruit store
 
 This repository contains a simple, multi‑lingual fruit shop for small‑scale farmers.  Customers can browse your current fruit inventory, add items to a shopping cart, review their basket, enter their name and an optional message, and place an order.  After checking out, the site displays a Vipps QR code for payment and sends you an order email via [EmailJS](https://www.emailjs.com/).  Everything runs client‑side, so there’s no need for an expensive app service or Azure Functions.  Host it on any static web host (Azure Storage, GitHub Pages, Netlify, etc.) and use Cloudflare to handle your custom domain and TLS.
 
@@ -74,7 +74,7 @@ This project uses [EmailJS](https://www.emailjs.com/) to send order notification
 3. **Create an email template** under **Email Templates**.  If you would like a bilingual notification, use a subject such as:
 
    ```
-   New fruit order / Ny fruktbestilling – Frukt Finsrud
+   New fruit order / Ny fruktbestilling – Finsrud Frukt
    ```
 
    And paste the following HTML into the template’s HTML tab (you may customise colours and wording).  This template includes your logo at the top, customer name, phone and optional message, a list of the ordered items and the total in both Norwegian and English:
@@ -82,7 +82,7 @@ This project uses [EmailJS](https://www.emailjs.com/) to send order notification
    ```html
    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
      <div style="text-align: center; padding: 20px;">
-       <img src="https://finsrudfrukt.z6.web.core.windows.net/images/logo.png" alt="Frukt Finsrud" style="max-height: 80px;">
+       <img src="https://finsrudfrukt.z6.web.core.windows.net/images/logo.png" alt="Finsrud Frukt" style="max-height: 80px;">
        <h2>Fruktbestilling / Fruit Order</h2>
      </div>
      <div style="padding: 20px; background-color: #f9f9f9; border-radius: 8px;">

@@ -1,4 +1,4 @@
-/* Basic styling for Frukt Finsrud store */
+/* Basic styling for Finsrud Frukt store */
 
 body {
   font-family: Arial, sans-serif;
@@ -12,6 +12,7 @@ header {
   color: #fff;
   padding: 20px 10px;
   text-align: center;
+  position: relative;
 }
 
 /* Language selector styling */
@@ -96,6 +97,12 @@ header p {
   color: #666;
 }
 
+.product-description {
+  margin-top: 5px;
+  font-size: 0.85rem;
+  color: #444;
+}
+
 .card-content .quantity {
   margin-top: auto;
   display: flex;
@@ -111,15 +118,21 @@ header p {
 
 /* View cart button */
 #view-cart-btn {
-  display: block;
-  margin: 20px auto;
-  padding: 10px 30px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  margin: 0;
+  padding: 10px 16px;
   font-size: 1rem;
   background-color: #4CAF50;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+#view-cart-btn::before {
+  content: '🛒 ';
 }
 
 #view-cart-btn:hover {
