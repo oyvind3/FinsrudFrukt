@@ -1,0 +1,44 @@
+[
+  {
+    "id": "plum-opal",
+    "category": "plum",
+    "name": "Plum",
+    "variety": "Opal",
+    "price": 50,
+    "image": "plums.jpg"
+  },
+  {
+    "id": "plum-victoria",
+    "category": "plum",
+    "name": "Plum",
+    "variety": "Victoria",
+    "price": 55,
+    "image": "plums.jpg"
+  },
+  {
+    "id": "apple-aroma",
+    "category": "apple",
+    "name": "Apple",
+    "variety": "Aroma",
+    "price": 40,
+    "image": "apple.jpg"
+  },
+  {
+    "id": "apple-gravenstein",
+    "category": "apple",
+    "name": "Apple",
+    "variety": "Gravenstein",
+    "price": 45,
+    "image": "apple.jpg"
+  }
+  ,
+  {
+    "id": "eplemost",
+    "category": "juice",
+    "name": "Apple Cider",
+    "variety": "Eplemost",
+    "price": 0,
+    "image": "apple.jpg",
+    "comingSoon": true
+  }
+]

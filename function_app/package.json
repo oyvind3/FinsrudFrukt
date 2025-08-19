@@ -1,0 +1,12 @@
+{
+  "name": "frukt-order-function",
+  "version": "1.0.0",
+  "description": "Azure Function to send email notification on fruit orders",
+  "main": "sendOrder/index.js",
+  "scripts": {
+    "start": "func start"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^7.4.2"
+  }
+}
