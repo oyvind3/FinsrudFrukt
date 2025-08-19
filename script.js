@@ -1,4 +1,4 @@
-/* JavaScript for Frukt Finsrud store */
+/* JavaScript for Finsrud Frukt store */
 
 // EmailJS configuration.  Replace these with your own values from EmailJS.
 // See README for instructions on obtaining your service ID, template ID and public key.
@@ -15,7 +15,7 @@ const EMAILJS_CONFIRM_TEMPLATE_ID = "template_2hxbfa7";
 // Language translations.  Each string in the UI has an entry here for English (en) and Norwegian (no).
 const translations = {
   en: {
-    title: 'Frukt Finsrud',
+    title: 'Finsrud Frukt',
     tagline: 'Fresh plums and apples from our garden',
     productsHeading: 'Our Products',
     pricePerKg: 'Price per kg',
@@ -46,7 +46,7 @@ const translations = {
     ,emailLabel: 'Email (optional)'
   },
   no: {
-    title: 'Frukt Finsrud',
+    title: 'Finsrud Frukt',
     tagline: 'Ferske plommer og epler fra hagen vår',
     productsHeading: 'Våre produkter',
     pricePerKg: 'Pris per kg',
@@ -307,6 +307,7 @@ function loadProducts() {
         <div class="card-content">
           <h3>${translatedName} (${product.variety})</h3>
           <p><em>${translations[currentLanguage].comingSoon}</em></p>
+          ${product.description ? `<p class="product-description">${product.description[currentLanguage]}</p>` : ''}
         </div>
       `;
     } else {
@@ -315,6 +316,7 @@ function loadProducts() {
         <div class="card-content">
           <h3>${translatedName} (${product.variety})</h3>
           <p>${priceText}: <strong>${product.price} NOK</strong></p>
+          ${product.description ? `<p class="product-description">${product.description[currentLanguage]}</p>` : ''}
           <div class="quantity">
             <label for="${product.id}">${kgLabel}:</label>
             <input type="number" id="${product.id}" min="0" step="0.5" value="0">
@@ -444,11 +446,67 @@ let productData = [];
 
 // Fallback products used when products.json cannot be loaded (e.g. when opened via file://)
 const fallbackProducts = [
-  { id: 'plum-opal', category: 'plum', name: 'Plum', variety: 'Opal', price: 50, image: 'plums.jpg' },
-  { id: 'plum-victoria', category: 'plum', name: 'Plum', variety: 'Victoria', price: 55, image: 'plums.jpg' },
-  { id: 'apple-aroma', category: 'apple', name: 'Apple', variety: 'Aroma', price: 40, image: 'apple.jpg' },
-  { id: 'apple-gravenstein', category: 'apple', name: 'Apple', variety: 'Gravenstein', price: 45, image: 'apple.jpg' }
-  , { id: 'eplemost', category: 'juice', name: 'Apple Cider', variety: 'Eplemost', price: 0, image: 'apple.jpg', comingSoon: true }
+  {
+    id: 'plum-opal',
+    category: 'plum',
+    name: 'Plum',
+    variety: 'Opal',
+    price: 50,
+    image: 'plums.jpg',
+    description: {
+      en: 'Early ripening plum with sweet, juicy flesh.',
+      no: 'Tidlig modnende plomme med søtt, saftig fruktkjøtt.'
+    }
+  },
+  {
+    id: 'plum-victoria',
+    category: 'plum',
+    name: 'Plum',
+    variety: 'Victoria',
+    price: 55,
+    image: 'plums.jpg',
+    description: {
+      en: 'Classic plum, sweet and great for desserts.',
+      no: 'Klassisk plomme, søt og fin til desserter.'
+    }
+  },
+  {
+    id: 'apple-aroma',
+    category: 'apple',
+    name: 'Apple',
+    variety: 'Aroma',
+    price: 40,
+    image: 'apple.jpg',
+    description: {
+      en: 'Fragrant Norwegian apple with crisp bite.',
+      no: 'Aromatisk norsk eple med sprøtt bitt.'
+    }
+  },
+  {
+    id: 'apple-gravenstein',
+    category: 'apple',
+    name: 'Apple',
+    variety: 'Gravenstein',
+    price: 45,
+    image: 'apple.jpg',
+    description: {
+      en: 'Traditional heritage apple, tart and aromatic.',
+      no: 'Tradisjonelt arveeple, syrlig og aromatisk.'
+    }
+  },
+  {
+    id: 'eplemost',
+    category: 'juice',
+    name: 'Apple Cider',
+    variety: 'Eplemost',
+    price: 0,
+    image: 'apple.jpg',
+    comingSoon: true,
+    description: {
+      en: 'Freshly pressed apple cider from our orchard.',
+      no: 'Nypresset eplemost fra vår frukthage.'
+    }
+  }
 ];
 
 // Initial page load
