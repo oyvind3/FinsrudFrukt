@@ -538,6 +538,21 @@ const fallbackProducts = [
       en: "Early ripening plum with sweet, juicy flesh.",
       no: "Tidlig modnende plomme med søtt, saftig fruktkjøtt."
     }
+  }, 
+  {
+    id: "apple-transparent-blanche",
+    category: "apple",
+    name: "Apple",
+    variety: "Transparente Blanche",
+    price: 40,
+    image: "transparante_b_1.png",
+    images: [
+      "transparante_b_2.png"
+    ],
+    description: {
+      en: "Early-season apple with pale yellow skin and tender flesh.",
+      no: "Tidligmodnende eple med blekgult skall og saftig fruktkjøtt."
+    }
   },
   {
     id: "plum-victoria",
@@ -554,21 +569,6 @@ const fallbackProducts = [
       no: "Klassisk plomme, søt og fin til desserter."
     },
     comingSoon: true
-  },
-  {
-    id: "apple-transparent-blanche",
-    category: "apple",
-    name: "Apple",
-    variety: "Transparente Blanche",
-    price: 40,
-    image: "transparante_b_1.png",
-    images: [
-      "transparante_b_2.png"
-    ],
-    description: {
-      en: "Early-season apple with pale yellow skin and tender flesh.",
-      no: "Tidligmodnende eple med blekgult skall og saftig fruktkjøtt."
-    }
   },
   {
     id: "eplemost",
