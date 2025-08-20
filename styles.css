@@ -8,8 +8,8 @@ body {
 }
 
 header {
-  background-color: #4CAF50;
-  color: #fff;
+  background-color: #fff;    /* erstatter #4CAF50 (grønn) med hvit */
+  color: #2c3e50;           /* erstatter hvit tekst med mørk tekst (tilpasset resten av siden) */
   padding: 20px 10px;
   text-align: center;
 }

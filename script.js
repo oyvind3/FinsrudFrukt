@@ -524,72 +524,70 @@ let productData = [];
 // Fallback products used when products.json cannot be loaded (e.g. when opened via file://)
 const fallbackProducts = [
   {
-    id: 'plum-opal',
-    category: 'plum',
-    name: 'Plum',
-    variety: 'Opal',
+    id: "plum-opal",
+    category: "plum",
+    name: "Plum",
+    variety: "Opal",
     price: 50,
-    image: 'plums.jpg',
-    images: ['plums.jpg'],
+    image: "plums.jpg",
+    images: [
+      "opal1.png",
+      "opal2.png"
+    ],
     description: {
-      en: 'Early ripening plum with sweet, juicy flesh.',
-      no: 'Tidlig modnende plomme med søtt, saftig fruktkjøtt.'
+      en: "Early ripening plum with sweet, juicy flesh.",
+      no: "Tidlig modnende plomme med søtt, saftig fruktkjøtt."
     }
   },
   {
-    id: 'plum-victoria',
-    category: 'plum',
-    name: 'Plum',
-    variety: 'Victoria',
+    id: "plum-victoria",
+    category: "plum",
+    name: "Plum",
+    variety: "Victoria",
     price: 55,
-    image: 'plums.jpg',
-    images: ['plums.jpg'],
+    image: "victoria_plum.png",
+    images: [
+      "victoria_plum.png"
+    ],
     description: {
-      en: 'Classic plum, sweet and great for desserts.',
-      no: 'Klassisk plomme, søt og fin til desserter.'
-    }
+      en: "Classic plum, sweet and great for desserts.",
+      no: "Klassisk plomme, søt og fin til desserter."
+    },
+    comingSoon: true
   },
   {
-    id: 'apple-aroma',
-    category: 'apple',
-    name: 'Apple',
-    variety: 'Aroma',
+    id: "apple-transparent-blanche",
+    category: "apple",
+    name: "Apple",
+    variety: "Transparente Blanche",
     price: 40,
-    image: 'apple.jpg',
-    images: ['apple.jpg'],
+    image: "transparante_b_1.png",
+    images: [
+      "transparante_b_2.png"
+    ],
     description: {
-      en: 'Fragrant Norwegian apple with crisp bite.',
-      no: 'Aromatisk norsk eple med sprøtt bitt.'
+      en: "Early-season apple with pale yellow skin and tender flesh.",
+      no: "Tidligmodnende eple med blekgult skall og saftig fruktkjøtt."
     }
   },
   {
-    id: 'apple-gravenstein',
-    category: 'apple',
-    name: 'Apple',
-    variety: 'Gravenstein',
-    price: 45,
-    image: 'apple.jpg',
-    images: ['apple.jpg'],
-    description: {
-      en: 'Traditional heritage apple, tart and aromatic.',
-      no: 'Tradisjonelt arveeple, syrlig og aromatisk.'
-    }
-  },
-  {
-    id: 'eplemost',
-    category: 'juice',
-    name: 'Apple Cider',
-    variety: 'Eplemost',
+    id: "eplemost",
+    category: "juice",
+    name: "Fresh apple juice",
+    variety: "Eplemost",
     price: 0,
-    image: 'apple.jpg',
-    images: ['apple.jpg'],
+    image: "apple.jpg",
+    images: [
+      "apple.jpg"
+    ],
     comingSoon: true,
     description: {
-      en: 'Freshly pressed apple cider from our orchard.',
-      no: 'Nypresset eplemost fra vår frukthage.'
+      en: "Freshly pressed apple cider from our orchard at beautiful Helgøya.",
+      no: "Nypresset eplemost fra vår frukthage på Helgøya."
     }
   }
 ];
+
 
 // Initial page load
 window.addEventListener('DOMContentLoaded', async () => {
