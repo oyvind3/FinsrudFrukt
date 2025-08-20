@@ -5,11 +5,12 @@
     "name": "Plum",
     "variety": "Opal",
     "price": 50,
-    "image": "opal2.jpeg",
+    "image": "opal4.jpeg",
     "images": [
       "opal2.jpeg",
       "opal3.jpeg",
-      "opal3.jpeg"
+      "opal3.jpeg",
+      "opal4.jpeg"
     ],
     "description": {
       "en": "Early ripening plum with sweet, juicy flesh. Delivered in baskets of approx. 700 grams.",
