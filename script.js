@@ -1,16 +1,21 @@
 /* JavaScript for Finsrud Frukt store */
 
-// EmailJS configuration.  Replace these with your own values from EmailJS.
-// See README for instructions on obtaining your service ID, template ID and public key.
-const EMAILJS_SERVICE_ID = "service_3lqit3v";
-const EMAILJS_TEMPLATE_ID = "template_26zdx42";
-const EMAILJS_PUBLIC_KEY = "yT9peAZgkN5cJr4lr";
+// EmailJS configuration placeholders. Real values are loaded at runtime from
+// environment variables or an external config.js file (see README for details).
+const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+const EMAILJS_CONFIRM_TEMPLATE_ID = 'YOUR_CONFIRM_TEMPLATE_ID';
 
-// Optional: Template ID for the confirmation email sent to the customer.  To enable
-// confirmation emails, create a second template in EmailJS and set this constant
-// to that template's ID (e.g. "template_confirm123").  Leave as the
-// placeholder value if you do not want to send customer confirmations.
-const EMAILJS_CONFIRM_TEMPLATE_ID = "template_2hxbfa7";
+const emailJsConfig = Object.assign(
+  {
+    serviceId: EMAILJS_SERVICE_ID,
+    templateId: EMAILJS_TEMPLATE_ID,
+    publicKey: EMAILJS_PUBLIC_KEY,
+    confirmTemplateId: EMAILJS_CONFIRM_TEMPLATE_ID
+  },
+  window.emailJsConfig || {}
+);
 
 // Language translations.  Each string in the UI has an entry here for English (en) and Norwegian (no).
 const translations = {
@@ -396,7 +401,7 @@ function sendOrder(items, total) {
   document.getElementById('orderField').value = orderText;
   document.getElementById('totalField').value = total.toFixed(2);
   // Send the form via EmailJS
-  emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, '#orderForm')
+  emailjs.sendForm(emailJsConfig.serviceId, emailJsConfig.templateId, '#orderForm')
     .then(() => {
       showMessage(translations[currentLanguage].success);
     })
@@ -407,10 +412,10 @@ function sendOrder(items, total) {
 }
 
 // Send a confirmation email to the customer if they provided their email address.
-// This uses a separate EmailJS template (EMAILJS_CONFIRM_TEMPLATE_ID).
+// This uses a separate EmailJS template (emailJsConfig.confirmTemplateId).
 function sendConfirmationEmail(items, total, name, phone, note, email) {
   // Do nothing if no confirmation template is configured or if email is empty
-  if (!EMAILJS_CONFIRM_TEMPLATE_ID || EMAILJS_CONFIRM_TEMPLATE_ID === 'YOUR_CONFIRMATION_TEMPLATE_ID') return;
+  if (!emailJsConfig.confirmTemplateId || emailJsConfig.confirmTemplateId === 'YOUR_CONFIRM_TEMPLATE_ID') return;
   if (!email) return;
   // Compose the order summary
   const lines = items.map(item => {
@@ -427,7 +432,7 @@ function sendConfirmationEmail(items, total, name, phone, note, email) {
     to_email: email,
     email: email
   };
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONFIRM_TEMPLATE_ID, variables)
+  emailjs.send(emailJsConfig.serviceId, emailJsConfig.confirmTemplateId, variables)
     .catch(err => {
       console.warn('EmailJS confirmation failed:', err);
     });
@@ -512,8 +517,8 @@ const fallbackProducts = [
 // Initial page load
 window.addEventListener('DOMContentLoaded', async () => {
   // Initialise EmailJS if keys are provided
-  if (EMAILJS_PUBLIC_KEY && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
-    emailjs.init(EMAILJS_PUBLIC_KEY);
+  if (emailJsConfig.publicKey && !emailJsConfig.publicKey.startsWith('YOUR_')) {
+    emailjs.init(emailJsConfig.publicKey);
   }
   // Determine and set default language
   const storedLang = localStorage.getItem('frukt_language');
