@@ -6,6 +6,7 @@
     "variety": "Opal",
     "price": 50,
     "image": "plums.jpg",
+    "images": ["plums.jpg"],
     "description": {
       "en": "Early ripening plum with sweet, juicy flesh.",
       "no": "Tidlig modnende plomme med søtt, saftig fruktkjøtt."
@@ -18,6 +19,7 @@
     "variety": "Victoria",
     "price": 55,
     "image": "plums.jpg",
+    "images": ["plums.jpg"],
     "description": {
       "en": "Classic plum, sweet and great for desserts.",
       "no": "Klassisk plomme, søt og fin til desserter."
@@ -30,6 +32,7 @@
     "variety": "Aroma",
     "price": 40,
     "image": "apple.jpg",
+    "images": ["apple.jpg"],
     "description": {
       "en": "Fragrant Norwegian apple with crisp bite.",
       "no": "Aromatisk norsk eple med sprøtt bitt."
@@ -42,6 +45,7 @@
     "variety": "Gravenstein",
     "price": 45,
     "image": "apple.jpg",
+    "images": ["apple.jpg"],
     "description": {
       "en": "Traditional heritage apple, tart and aromatic.",
       "no": "Tradisjonelt arveeple, syrlig og aromatisk."
@@ -55,6 +59,7 @@
     "variety": "Eplemost",
     "price": 0,
     "image": "apple.jpg",
+    "images": ["apple.jpg"],
     "comingSoon": true,
     "description": {
       "en": "Freshly pressed apple cider from our orchard.",
