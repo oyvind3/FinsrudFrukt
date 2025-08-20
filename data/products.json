@@ -32,6 +32,22 @@
     }
   },
   {
+    "id": "apple-hausmann",
+    "category": "apple",
+    "name": "Apple",
+    "variety": "Hausmann",
+    "price": 45,
+    "image": "https://finsrudfrukt.azureedge.net/images/hartman1.png",
+    "images": [
+      "https://finsrudfrukt.azureedge.net/images/hartman1.png"
+    ],
+    "description": {
+      "en": "A crisp, slightly tart apple, great for eating fresh.",
+      "no": "Et sprøtt og lett syrlig eple, godt som spise-eple."
+    }
+  }
+  
+  {
     "id": "plum-victoria",
     "category": "plum",
     "name": "Plum",
