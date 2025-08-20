@@ -5,10 +5,11 @@
     "name": "Plum",
     "variety": "Opal",
     "price": 50,
-    "image": "plums.jpg",
+    "image": "opal2.jpeg",
     "images": [
-      "opal1.png",
-      "opal2.png"
+      "opal2.jpeg",
+      "opal3.jpeg",
+      "opal3.jpeg"
     ],
     "description": {
       "en": "Early ripening plum with sweet, juicy flesh.",
@@ -21,10 +22,9 @@
     "name": "Apple",
     "variety": "Transparente Blanche",
     "price": 40,
-    "image": "transparente_b_1.png",
+    "image": "transparent1.jpeg",
     "images": [
-      "transparente_b_1.png",
-      "transparante_b_2.png"
+      "transparent1.jpeg"
     ],
     "description": {
       "en": "Early-season apple with pale yellow skin and tender flesh.",
@@ -37,9 +37,10 @@
     "name": "Apple",
     "variety": "Hausmann",
     "price": 45,
-    "image": "https://finsrudfrukt.azureedge.net/images/hartman1.png",
+    "image": "hausmann2.jpeg",
     "images": [
-      "https://finsrudfrukt.azureedge.net/images/hartman1.png"
+      "hausmann1.jpeg",
+      "hausmann2.jpeg"
     ],
     "description": {
       "en": "A crisp, slightly tart apple, great for eating fresh.",
