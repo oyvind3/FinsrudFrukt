@@ -5,7 +5,7 @@
     "name": "Plum",
     "variety": "Opal",
     "price": 50,
-    "image": "opal1.png",
+    "image": "plums.jpg",
     "images": [
       "opal1.png",
       "opal2.png"
@@ -37,8 +37,9 @@
     "name": "Apple",
     "variety": "Transparente Blanche",
     "price": 40,
-    "image": "transparante_b_1.png",
+    "image": "transparente_b_1.png",
     "images": [
+      "transparente_b_1.png",
       "transparante_b_2.png"
     ],
     "description": {
