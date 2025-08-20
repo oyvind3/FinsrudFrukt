@@ -265,11 +265,18 @@ function submitOrder() {
     alert(translations[currentLanguage].nameRequired);
     return;
   }
-  const phone = phoneInput ? phoneInput.value.trim() : '';
+  if (!phone) {
+    alert(translations[currentLanguage].phoneRequired || "Vennligst oppgi telefonnummer.");
+    return;
+  }  
   const note = noteInput ? noteInput.value.trim() : '';
-  // Read email (optional)
+  // Read email (required)
   const emailInput = document.getElementById('customer-email');
   const email = emailInput ? emailInput.value.trim() : '';
+  if (!email) {
+   alert(translations[currentLanguage].emailRequired || "Vennligst oppgi e-postadresse.");
+    return;
+  }
   // Populate hidden fields
   document.getElementById('nameField').value = name;
   document.getElementById('phoneField').value = phone;
