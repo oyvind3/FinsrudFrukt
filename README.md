@@ -41,7 +41,7 @@ To add a new product or variety simply append a new object to this file.  Each p
 
 Customers add items to a cart by entering the desired kilograms and clicking **Add to Cart**.  The **View Cart** button shows how many items are in the basket.  In the cart view, customers can verify the order, see the running total, fill in their name (required), phone and message (both optional) and then submit the order.  After checkout the cart is cleared.
 
-If you would like to send customers a confirmation email, there is also an **Email** field on the checkout form.  When the customer enters an address, the site uses a second EmailJS template (configured in `script.js` via `EMAILJS_CONFIRM_TEMPLATE_ID`) to send a copy of the order to that address.  If no email is provided, no confirmation is sent.  Your own email (configured in the main template) will always receive the order notification.
+If you would like to send customers a confirmation email, there is also an **Email** field on the checkout form.  When the customer enters an address, the site uses a second EmailJS template (configured via `EMAILJS_CONFIRM_TEMPLATE_ID` in `config.js` or environment variables) to send a copy of the order to that address.  If no email is provided, no confirmation is sent.  Your own email (configured in the main template) will always receive the order notification.
 
 ## Deploying the static website and configuring your domain
 
@@ -99,16 +99,47 @@ This project uses [EmailJS](https://www.emailjs.com/) to send order notification
 
    The `{{name}}`, `{{phone}}`, `{{note}}`, `{{order}}` and `{{total}}` placeholders are filled in by the website when the customer submits the cart.  You can adjust the template or add your own fields as long as the names match the `input` names in the hidden form (`orderForm`).
 
-4. **Collect your keys**.  In the **Integration** tab, take note of the **Service ID**, **Template ID** and **Public Key**.  Open `script.js` and replace the `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID` and `EMAILJS_PUBLIC_KEY` constants with your values.
+4. **Collect your keys**.  In the **Integration** tab, take note of the **Service ID**, **Template ID** and **Public Key**.
 
-5. **Publish the site**.  Upload the updated files to your storage account.  When a user submits an order, the site will populate a hidden form and call `emailjs.sendForm()` to send you an email.
+5. **Provide the keys securely**.  There are two recommended approaches:
+
+   - **Environment variables** – During deployment, generate a `config.js` file populated from environment variables:
+
+     ```bash
+     cat <<EOF > config.js
+     window.emailJsConfig = {
+       serviceId: '${EMAILJS_SERVICE_ID}',
+       templateId: '${EMAILJS_TEMPLATE_ID}',
+       publicKey: '${EMAILJS_PUBLIC_KEY}',
+       confirmTemplateId: '${EMAILJS_CONFIRM_TEMPLATE_ID}'
+     };
+     EOF
+     ```
+
+     Ensure `config.js` is copied alongside `index.html`.
+
+   - **Manual config file** – Copy `config.example.js` to `config.js` and fill in your values:
+
+     ```javascript
+     // config.js
+     window.emailJsConfig = {
+       serviceId: 'your_service_id',
+       templateId: 'your_template_id',
+       publicKey: 'your_public_key',
+       confirmTemplateId: 'your_confirm_template_id' // optional
+     };
+     ```
+
+   The `config.js` file is ignored by git (`.gitignore`) so your keys aren't committed to the repository.
+
+6. **Publish the site**.  Upload the updated files (including the generated `config.js`) to your storage account.  When a user submits an order, the site will populate a hidden form and call `emailjs.sendForm()` to send you an email.
 
 ### Sending a confirmation email to the customer
 
 If you want the customer to receive a copy of their order, follow these additional steps:
 
 1. **Create a second EmailJS template** (e.g. `template_order_confirmation`).  Set its **To Email** field to `{{to_email}}` so that the recipient is determined dynamically.  You can reuse the same body and subject as your main template or create a separate design.
-2. **Note the new template’s ID** and assign it to `EMAILJS_CONFIRM_TEMPLATE_ID` in `script.js`.
+2. **Note the new template’s ID** and set it in `config.js` (or the corresponding environment variable `EMAILJS_CONFIRM_TEMPLATE_ID`).
 3. **In the checkout form**, customers can enter their email address.  When they submit the order, the script will call `emailjs.send()` to send the confirmation email to whatever address they provided.  If the field is left blank, no confirmation is sent.
 4. **Your own email** (set in the first template’s **To Email** field) will still receive the order notification every time.
 
