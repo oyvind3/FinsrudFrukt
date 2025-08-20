@@ -49,13 +49,16 @@ const translations = {
     ,checkout: 'Submit Order'
     ,back: 'Back'
     ,nameLabel: 'Name'
-    ,phoneLabel: 'Phone (optional)'
+    ,phoneLabel: 'Phone'
     ,commentLabel: 'Message (optional)'
     ,cartEmpty: 'Your cart is empty.'
     ,addedToCart: 'Added to cart!'
     ,comingSoon: 'Coming soon'
     ,nameRequired: 'Please enter your name.'
-    ,emailLabel: 'Email (optional)'
+    ,emailLabel: 'Email'
+    ,phoneRequired: 'Please enter your phone number.'
+    ,emailRequired: 'Please enter your email address.'
+    ,commentPlaceholder: 'e.g., pickup at Helgøya, pickup in Oslo (Lilleaker or Økern) or delivery (on request)'
   },
   no: {
     title: 'Finsrud Frukt',
@@ -80,13 +83,16 @@ const translations = {
     ,checkout: 'Send bestilling'
     ,back: 'Tilbake'
     ,nameLabel: 'Navn'
-    ,phoneLabel: 'Telefon (valgfritt)'
+    ,phoneLabel: 'Telefon'
     ,commentLabel: 'Melding (valgfritt)'
     ,cartEmpty: 'Handlekurven er tom.'
     ,addedToCart: 'Lagt i handlekurv!'
     ,comingSoon: 'Kommer snart'
     ,nameRequired: 'Vennligst oppgi navnet ditt.'
-    ,emailLabel: 'E‑post (valgfritt)'
+    ,emailLabel: 'E-post'
+    ,phoneRequired: 'Vennligst oppgi telefonnummer.'
+    ,emailRequired: 'Vennligst oppgi e-postadressen din.'
+    ,commentPlaceholder: 'For eksempel: henting på Helgøya, henting i Oslo (Lilleaker eller Økern) eller utkjøring (på forespørsel)'
   }
 };
 
@@ -97,8 +103,8 @@ const productNameTranslations = {
   , 'Apple Cider': { en: 'Apple Cider', no: 'Eplemost' }
 };
 
-// Current language (defaults to English but is updated on load)
-let currentLanguage = 'en';
+// Current language (defaults to Norwegian but is updated on load)
+let currentLanguage = 'no';
 
 // Shopping cart.  Each entry has { id, name, variety, price, quantity, total }.
 let cart = [];
@@ -194,6 +200,7 @@ function renderCart() {
   const nameLabel = document.getElementById('name-label');
   const phoneLabel = document.getElementById('phone-label');
   const commentLabel = document.getElementById('comment-label');
+  const commentInput = document.getElementById('customer-note');
   const emailLabelEl = document.getElementById('email-label');
   const cartHeading = document.getElementById('cart-heading');
   const cartTotalLabel = document.getElementById('cart-total-label');
@@ -206,6 +213,7 @@ function renderCart() {
   if (nameLabel) nameLabel.textContent = `${translations[currentLanguage].nameLabel}:`;
   if (phoneLabel) phoneLabel.textContent = `${translations[currentLanguage].phoneLabel}:`;
   if (commentLabel) commentLabel.textContent = `${translations[currentLanguage].commentLabel}:`;
+  if (commentInput) commentInput.placeholder = translations[currentLanguage].commentPlaceholder;
   if (emailLabelEl) emailLabelEl.textContent = `${translations[currentLanguage].emailLabel}:`;
   // Clear list
   list.innerHTML = '';
@@ -261,20 +269,21 @@ function submitOrder() {
   const phoneInput = document.getElementById('customer-phone');
   const noteInput = document.getElementById('customer-note');
   const name = nameInput ? nameInput.value.trim() : '';
+  const phone = phoneInput ? phoneInput.value.trim() : '';
   if (!name) {
     alert(translations[currentLanguage].nameRequired);
     return;
   }
   if (!phone) {
-    alert(translations[currentLanguage].phoneRequired || "Vennligst oppgi telefonnummer.");
+    alert(translations[currentLanguage].phoneRequired);
     return;
-  }  
+  }
   const note = noteInput ? noteInput.value.trim() : '';
   // Read email (required)
   const emailInput = document.getElementById('customer-email');
   const email = emailInput ? emailInput.value.trim() : '';
   if (!email) {
-   alert(translations[currentLanguage].emailRequired || "Vennligst oppgi e-postadresse.");
+    alert(translations[currentLanguage].emailRequired);
     return;
   }
   // Populate hidden fields
@@ -603,9 +612,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (storedLang) {
     currentLanguage = storedLang;
   } else {
-    // Use browser language: prefer Norwegian if starts with 'no' or 'nb'
-    const navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-    currentLanguage = navLang.startsWith('no') || navLang.startsWith('nb') ? 'no' : 'en';
+    currentLanguage = 'no';
     localStorage.setItem('frukt_language', currentLanguage);
   }
   // Set language select value

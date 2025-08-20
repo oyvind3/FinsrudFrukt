@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,33 +14,33 @@
 <body>
   <header>
     <h1 id="title">Finsrud Frukt</h1>
-    <p id="tagline">Fresh plums and apples from our garden</p>
+    <p id="tagline">Ferske plommer og epler fra hagen vår</p>
     <div class="language-switcher">
-      <label id="language-label" for="language-select">Language:</label>
+      <label id="language-label" for="language-select">Språk:</label>
       <select id="language-select">
-        <option value="no">Norsk</option>
+        <option value="no" selected>Norsk</option>
         <option value="en">English</option>
       </select>
     </div>
   </header>
-  <button id="view-cart-btn" class="cart-button" aria-label="View Cart">
+  <button id="view-cart-btn" class="cart-button" aria-label="Vis handlekurv">
     <i class="fas fa-shopping-cart"></i>
     <span id="cart-count" class="cart-count"></span>
   </button>
   <div class="container">
     <section class="product-section">
-      <h2 id="products-heading">Our Products</h2>
+        <h2 id="products-heading">Våre produkter</h2>
       <div class="product-list">
         <!-- Products will be injected here by JavaScript -->
       </div>
       <div id="message" class="message" style="display:none;"></div>
     </section>
-    <section id="order-summary">
-      <h2 id="order-heading">Your Order</h2>
+      <section id="order-summary">
+        <h2 id="order-heading">Din bestilling</h2>
       <ul>
         <!-- List of ordered items -->
       </ul>
-      <p><strong id="total-label">Total:</strong> <span id="total-amount">0</span> NOK</p>
+        <p><strong id="total-label">Totalt:</strong> <span id="total-amount">0</span> NOK</p>
       <!-- <div id="qr-code">
         <p id="qr-prompt">Scan the VIPPS QR code to pay</p>
         <img src="images/qr.png" alt="Vipps QR Code">
@@ -48,25 +48,25 @@
     </section>
   </div>
   <!-- Shopping cart and checkout section -->
-  <section id="cart-section" style="display:none;">
-    <h2 id="cart-heading">Your Cart</h2>
+    <section id="cart-section" style="display:none;">
+      <h2 id="cart-heading">Din handlekurv</h2>
     <ul id="cart-list">
       <!-- Cart items will be injected here -->
     </ul>
-    <p><strong id="cart-total-label">Total:</strong> <span id="cart-total">0</span> NOK</p>
+      <p><strong id="cart-total-label">Totalt:</strong> <span id="cart-total">0</span> NOK</p>
     <div class="customer-info">
-      <label id="name-label" for="customer-name">Name:</label>
-      <input type="text" id="customer-name">
-      <label id="phone-label" for="customer-phone">Phone (optional):</label>
-      <input type="text" id="customer-phone">
-      <!-- Email field so the customer can receive a confirmation copy -->
-      <label id="email-label" for="customer-email">Email (optional):</label>
-      <input type="email" id="customer-email">
-      <label id="comment-label" for="customer-note">Message (optional):</label>
-      <textarea id="customer-note"></textarea>
-    </div>
-    <button id="checkout-btn">Submit Order</button>
-    <button id="close-cart-btn">Back</button>
+        <label id="name-label" for="customer-name">Navn:</label>
+        <input type="text" id="customer-name">
+        <label id="phone-label" for="customer-phone">Telefon:</label>
+        <input type="tel" id="customer-phone" required>
+        <!-- Email field so the customer can receive a confirmation copy -->
+        <label id="email-label" for="customer-email">E-post:</label>
+        <input type="email" id="customer-email" required>
+        <label id="comment-label" for="customer-note">Melding (valgfritt):</label>
+        <textarea id="customer-note" placeholder="For eksempel: henting på Helgøya, henting i Oslo (Lilleaker eller Økern) eller utkjøring (på forespørsel)"></textarea>
+      </div>
+      <button id="checkout-btn">Send bestilling</button>
+      <button id="close-cart-btn">Tilbake</button>
     <div id="cart-message" class="message" style="display:none;"></div>
   </section>
 
