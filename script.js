@@ -17,6 +17,12 @@ const emailJsConfig = Object.assign(
   window.emailJsConfig || {}
 );
 
+// Initialise EmailJS immediately if credentials are provided.
+// This ensures the SDK is ready before any order is submitted.
+if (emailJsConfig.publicKey && !emailJsConfig.publicKey.startsWith('YOUR_')) {
+  emailjs.init(emailJsConfig.publicKey);
+}
+
 // Language translations.  Each string in the UI has an entry here for English (en) and Norwegian (no).
 const translations = {
   en: {
@@ -96,14 +102,22 @@ let currentLanguage = 'en';
 // Shopping cart.  Each entry has { id, name, variety, price, quantity, total }.
 let cart = [];
 
+// Variables for product modal
+let modalProductImages = [];
+let modalProductId = null;
+let modalImageIndex = 0;
+
 // Update the text on the cart button to show number of items
 function updateCartCount() {
   const btn = document.getElementById('view-cart-btn');
-  if (!btn) return;
+  const countEl = document.getElementById('cart-count');
+  if (!btn || !countEl) return;
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-  // Show count only if > 0
-  const label = translations[currentLanguage].viewCart;
-  btn.textContent = count > 0 ? `${label} (${count})` : label;
+  countEl.textContent = count;
+  countEl.style.display = count > 0 ? 'flex' : 'none';
+  // Set tooltip/aria label
+  btn.title = translations[currentLanguage].viewCart;
+  btn.setAttribute('aria-label', translations[currentLanguage].viewCart);
 }
 
 // Add a product to the cart.  If the product is already present, increment the quantity.
@@ -129,6 +143,44 @@ function addToCart(productId, quantity) {
   }
   updateCartCount();
   showMessage(translations[currentLanguage].addedToCart);
+}
+
+// Open modal with detailed product info and image slider
+function openProductModal(product) {
+  const modal = document.getElementById('product-modal');
+  if (!modal) return;
+  modalProductId = product.id;
+  modalProductImages = (product.images && product.images.length) ? product.images : [product.image];
+  modalImageIndex = 0;
+  const qtyInput = document.getElementById('modal-quantity');
+  if (qtyInput) qtyInput.value = 0;
+  updateModalContent(product);
+  modal.style.display = 'flex';
+}
+
+function updateModalContent(product) {
+  const modalImg = document.getElementById('modal-image');
+  const modalTitle = document.getElementById('modal-title');
+  const modalDesc = document.getElementById('modal-description');
+  const modalAdd = document.getElementById('modal-add-btn');
+  const qtyLabel = document.getElementById('modal-kg-label');
+  if (modalImg) modalImg.src = `images/${modalProductImages[modalImageIndex]}`;
+  if (modalTitle) modalTitle.textContent = `${translateProductName(product.name)} (${product.variety})`;
+  if (modalDesc) modalDesc.textContent = product.description ? product.description[currentLanguage] : '';
+  if (modalAdd) modalAdd.textContent = translations[currentLanguage].addToCart;
+  if (qtyLabel) qtyLabel.textContent = `${translations[currentLanguage].kg}:`;
+}
+
+function closeProductModal() {
+  const modal = document.getElementById('product-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function changeModalImage(delta) {
+  if (!modalProductImages.length) return;
+  modalImageIndex = (modalImageIndex + delta + modalProductImages.length) % modalProductImages.length;
+  const modalImg = document.getElementById('modal-image');
+  if (modalImg) modalImg.src = `images/${modalProductImages[modalImageIndex]}`;
 }
 
 // Render the cart contents in the cart section
@@ -305,23 +357,26 @@ function loadProducts() {
     const priceText = translations[currentLanguage].pricePerKg;
     const kgLabel = translations[currentLanguage].kg;
     let cardInner = '';
+    const firstImage = (product.images && product.images.length)
+      ? product.images[0]
+      : product.image;
     if (product.comingSoon) {
       // Show coming soon label without inputs
       cardInner = `
-        <img src="images/${product.image}" alt="${translatedName} ${product.variety}">
+        <img src="images/${firstImage}" alt="${translatedName} ${product.variety}" class="product-thumb">
         <div class="card-content">
           <h3>${translatedName} (${product.variety})</h3>
           <p><em>${translations[currentLanguage].comingSoon}</em></p>
-          ${product.description ? `<p class="product-description">${product.description[currentLanguage]}</p>` : ''}
+          ${product.description ? `<p class=\"product-description\">${product.description[currentLanguage]}</p>` : ''}
         </div>
       `;
     } else {
       cardInner = `
-        <img src="images/${product.image}" alt="${translatedName} ${product.variety}">
+        <img src="images/${firstImage}" alt="${translatedName} ${product.variety}" class="product-thumb">
         <div class="card-content">
           <h3>${translatedName} (${product.variety})</h3>
           <p>${priceText}: <strong>${product.price} NOK</strong></p>
-          ${product.description ? `<p class="product-description">${product.description[currentLanguage]}</p>` : ''}
+          ${product.description ? `<p class=\"product-description\">${product.description[currentLanguage]}</p>` : ''}
           <div class="quantity">
             <label for="${product.id}">${kgLabel}:</label>
             <input type="number" id="${product.id}" min="0" step="0.5" value="0">
@@ -331,6 +386,10 @@ function loadProducts() {
       `;
     }
     card.innerHTML = cardInner;
+    const imgEl = card.querySelector('img');
+    if (imgEl) {
+      imgEl.addEventListener('click', () => openProductModal(product));
+    }
     listContainer.appendChild(card);
   });
 }
@@ -391,6 +450,18 @@ function displaySummary(items, total) {
 // populates hidden form fields and submits the form through EmailJS.  On success or failure,
 // a translated message is displayed to the user.
 function sendOrder(items, total) {
+  const form = document.getElementById('orderForm');
+  if (!form) {
+    console.warn('orderForm element not found; cannot send email');
+    return;
+  }
+  // Ensure EmailJS is configured before attempting to send
+  if (!emailJsConfig.serviceId || emailJsConfig.serviceId.startsWith('YOUR_') ||
+      !emailJsConfig.templateId || emailJsConfig.templateId.startsWith('YOUR_')) {
+    console.warn('EmailJS credentials are missing; skipping send');
+    showMessage(translations[currentLanguage].error, true);
+    return;
+  }
   // Build human‑readable order text for the email
   const lines = items.map(item => {
     const translatedName = translateProductName(item.name);
@@ -401,7 +472,7 @@ function sendOrder(items, total) {
   document.getElementById('orderField').value = orderText;
   document.getElementById('totalField').value = total.toFixed(2);
   // Send the form via EmailJS
-  emailjs.sendForm(emailJsConfig.serviceId, emailJsConfig.templateId, '#orderForm')
+  emailjs.sendForm(emailJsConfig.serviceId, emailJsConfig.templateId, form)
     .then(() => {
       showMessage(translations[currentLanguage].success);
     })
@@ -458,6 +529,7 @@ const fallbackProducts = [
     variety: 'Opal',
     price: 50,
     image: 'plums.jpg',
+    images: ['plums.jpg'],
     description: {
       en: 'Early ripening plum with sweet, juicy flesh.',
       no: 'Tidlig modnende plomme med søtt, saftig fruktkjøtt.'
@@ -470,6 +542,7 @@ const fallbackProducts = [
     variety: 'Victoria',
     price: 55,
     image: 'plums.jpg',
+    images: ['plums.jpg'],
     description: {
       en: 'Classic plum, sweet and great for desserts.',
       no: 'Klassisk plomme, søt og fin til desserter.'
@@ -482,6 +555,7 @@ const fallbackProducts = [
     variety: 'Aroma',
     price: 40,
     image: 'apple.jpg',
+    images: ['apple.jpg'],
     description: {
       en: 'Fragrant Norwegian apple with crisp bite.',
       no: 'Aromatisk norsk eple med sprøtt bitt.'
@@ -494,6 +568,7 @@ const fallbackProducts = [
     variety: 'Gravenstein',
     price: 45,
     image: 'apple.jpg',
+    images: ['apple.jpg'],
     description: {
       en: 'Traditional heritage apple, tart and aromatic.',
       no: 'Tradisjonelt arveeple, syrlig og aromatisk.'
@@ -506,6 +581,7 @@ const fallbackProducts = [
     variety: 'Eplemost',
     price: 0,
     image: 'apple.jpg',
+    images: ['apple.jpg'],
     comingSoon: true,
     description: {
       en: 'Freshly pressed apple cider from our orchard.',
@@ -516,10 +592,6 @@ const fallbackProducts = [
 
 // Initial page load
 window.addEventListener('DOMContentLoaded', async () => {
-  // Initialise EmailJS if keys are provided
-  if (emailJsConfig.publicKey && !emailJsConfig.publicKey.startsWith('YOUR_')) {
-    emailjs.init(emailJsConfig.publicKey);
-  }
   // Determine and set default language
   const storedLang = localStorage.getItem('frukt_language');
   if (storedLang) {
@@ -599,6 +671,27 @@ window.addEventListener('DOMContentLoaded', async () => {
         const quantity = input ? parseFloat(input.value) : 0;
         addToCart(productId, quantity);
       }
+    });
+  }
+  // Modal events
+  const modal = document.getElementById('product-modal');
+  const closeModalBtn = document.querySelector('#product-modal .close');
+  if (closeModalBtn) closeModalBtn.addEventListener('click', closeProductModal);
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeProductModal();
+    });
+  }
+  const prevBtn = document.getElementById('modal-prev');
+  const nextBtn = document.getElementById('modal-next');
+  if (prevBtn) prevBtn.addEventListener('click', () => changeModalImage(-1));
+  if (nextBtn) nextBtn.addEventListener('click', () => changeModalImage(1));
+  const modalAddBtn = document.getElementById('modal-add-btn');
+  if (modalAddBtn) {
+    modalAddBtn.addEventListener('click', () => {
+      const qty = parseFloat(document.getElementById('modal-quantity').value);
+      addToCart(modalProductId, qty);
+      closeProductModal();
     });
   }
 });
