@@ -16,22 +16,6 @@
     }
   },
   {
-    "id": "plum-victoria",
-    "category": "plum",
-    "name": "Plum",
-    "variety": "Victoria",
-    "price": 55,
-    "image": "victoria_plum.png",
-    "images": [
-      "victoria_plum.png"
-    ],
-    "description": {
-      "en": "Classic plum, sweet and great for desserts.",
-      "no": "Klassisk plomme, søt og fin til desserter."
-    },
-    "comingSoon": true
-  },
-  {
     "id": "apple-transparent-blanche",
     "category": "apple",
     "name": "Apple",
@@ -46,6 +30,22 @@
       "en": "Early-season apple with pale yellow skin and tender flesh.",
       "no": "Tidligmodnende eple med blekgult skall og saftig fruktkjøtt."
     }
+  },
+  {
+    "id": "plum-victoria",
+    "category": "plum",
+    "name": "Plum",
+    "variety": "Victoria",
+    "price": 55,
+    "image": "victoria_plum.png",
+    "images": [
+      "victoria_plum.png"
+    ],
+    "description": {
+      "en": "Classic plum, sweet and great for desserts.",
+      "no": "Klassisk plomme, søt og fin til desserter."
+    },
+    "comingSoon": true
   },
   {
     "id": "eplemost",
