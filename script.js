@@ -17,6 +17,12 @@ const emailJsConfig = Object.assign(
   window.emailJsConfig || {}
 );
 
+// Initialise EmailJS immediately if credentials are provided.
+// This ensures the SDK is ready before any order is submitted.
+if (emailJsConfig.publicKey && !emailJsConfig.publicKey.startsWith('YOUR_')) {
+  emailjs.init(emailJsConfig.publicKey);
+}
+
 // Language translations.  Each string in the UI has an entry here for English (en) and Norwegian (no).
 const translations = {
   en: {
@@ -444,6 +450,18 @@ function displaySummary(items, total) {
 // populates hidden form fields and submits the form through EmailJS.  On success or failure,
 // a translated message is displayed to the user.
 function sendOrder(items, total) {
+  const form = document.getElementById('orderForm');
+  if (!form) {
+    console.warn('orderForm element not found; cannot send email');
+    return;
+  }
+  // Ensure EmailJS is configured before attempting to send
+  if (!emailJsConfig.serviceId || emailJsConfig.serviceId.startsWith('YOUR_') ||
+      !emailJsConfig.templateId || emailJsConfig.templateId.startsWith('YOUR_')) {
+    console.warn('EmailJS credentials are missing; skipping send');
+    showMessage(translations[currentLanguage].error, true);
+    return;
+  }
   // Build human‑readable order text for the email
   const lines = items.map(item => {
     const translatedName = translateProductName(item.name);
@@ -454,7 +472,7 @@ function sendOrder(items, total) {
   document.getElementById('orderField').value = orderText;
   document.getElementById('totalField').value = total.toFixed(2);
   // Send the form via EmailJS
-  emailjs.sendForm(emailJsConfig.serviceId, emailJsConfig.templateId, '#orderForm')
+  emailjs.sendForm(emailJsConfig.serviceId, emailJsConfig.templateId, form)
     .then(() => {
       showMessage(translations[currentLanguage].success);
     })
@@ -574,10 +592,6 @@ const fallbackProducts = [
 
 // Initial page load
 window.addEventListener('DOMContentLoaded', async () => {
-  // Initialise EmailJS if keys are provided
-  if (emailJsConfig.publicKey && !emailJsConfig.publicKey.startsWith('YOUR_')) {
-    emailjs.init(emailJsConfig.publicKey);
-  }
   // Determine and set default language
   const storedLang = localStorage.getItem('frukt_language');
   if (storedLang) {
