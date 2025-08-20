@@ -1,4 +1,4 @@
-/* JavaScript for Frukt Finsrud store */
+/* JavaScript for Finsrud Frukt store */
 
 // EmailJS configuration.  Replace these with your own values from EmailJS.
 // See README for instructions on obtaining your service ID, template ID and public key.
@@ -15,7 +15,7 @@ const EMAILJS_CONFIRM_TEMPLATE_ID = "template_2hxbfa7";
 // Language translations.  Each string in the UI has an entry here for English (en) and Norwegian (no).
 const translations = {
   en: {
-    title: 'Frukt Finsrud',
+    title: 'Finsrud Frukt',
     tagline: 'Fresh plums and apples from our garden',
     productsHeading: 'Our Products',
     pricePerKg: 'Price per kg',
@@ -46,7 +46,7 @@ const translations = {
     ,emailLabel: 'Email (optional)'
   },
   no: {
-    title: 'Frukt Finsrud',
+    title: 'Finsrud Frukt',
     tagline: 'Ferske plommer og epler fra hagen vår',
     productsHeading: 'Våre produkter',
     pricePerKg: 'Pris per kg',
@@ -91,14 +91,13 @@ let currentLanguage = 'en';
 // Shopping cart.  Each entry has { id, name, variety, price, quantity, total }.
 let cart = [];
 
-// Update the text on the cart button to show number of items
+// Update the cart button to show number of items
 function updateCartCount() {
   const btn = document.getElementById('view-cart-btn');
   if (!btn) return;
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-  // Show count only if > 0
-  const label = translations[currentLanguage].viewCart;
-  btn.textContent = count > 0 ? `${label} (${count})` : label;
+  btn.textContent = count > 0 ? `🛒 (${count})` : '🛒';
+  btn.setAttribute('aria-label', translations[currentLanguage].viewCart);
 }
 
 // Add a product to the cart.  If the product is already present, increment the quantity.
@@ -123,6 +122,12 @@ function addToCart(productId, quantity) {
     });
   }
   updateCartCount();
+  // quick bump animation on cart button
+  const btn = document.getElementById('view-cart-btn');
+  if (btn) {
+    btn.classList.add('cart-bump');
+    setTimeout(() => btn.classList.remove('cart-bump'), 300);
+  }
   showMessage(translations[currentLanguage].addedToCart);
 }
 
@@ -296,6 +301,10 @@ function loadProducts() {
   productData.forEach((product) => {
     const card = document.createElement('div');
     card.className = 'card';
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('button') || e.target.tagName === 'INPUT') return;
+      openProductModal(product.id);
+    });
     const translatedName = translateProductName(product.name);
     const priceText = translations[currentLanguage].pricePerKg;
     const kgLabel = translations[currentLanguage].kg;
@@ -303,18 +312,20 @@ function loadProducts() {
     if (product.comingSoon) {
       // Show coming soon label without inputs
       cardInner = `
-        <img src="images/${product.image}" alt="${translatedName} ${product.variety}">
+        <img src="${product.images[0]}" alt="${translatedName} ${product.variety}">
         <div class="card-content">
           <h3>${translatedName} (${product.variety})</h3>
           <p><em>${translations[currentLanguage].comingSoon}</em></p>
+          ${product.description ? `<p class="product-description">${product.description[currentLanguage]}</p>` : ''}
         </div>
       `;
     } else {
       cardInner = `
-        <img src="images/${product.image}" alt="${translatedName} ${product.variety}">
+        <img src="${product.images[0]}" alt="${translatedName} ${product.variety}">
         <div class="card-content">
           <h3>${translatedName} (${product.variety})</h3>
           <p>${priceText}: <strong>${product.price} NOK</strong></p>
+          ${product.description ? `<p class="product-description">${product.description[currentLanguage]}</p>` : ''}
           <div class="quantity">
             <label for="${product.id}">${kgLabel}:</label>
             <input type="number" id="${product.id}" min="0" step="0.5" value="0">
@@ -439,16 +450,120 @@ function showMessage(msg, isError = false) {
   messageDiv.style.display = 'block';
 }
 
+// ---------- Product Modal ----------
+let modalProduct = null;
+let modalImageIndex = 0;
+
+function openProductModal(productId) {
+  modalProduct = productData.find(p => p.id === productId);
+  if (!modalProduct) return;
+  modalImageIndex = 0;
+  const modal = document.getElementById('product-modal');
+  const img = document.getElementById('modal-image');
+  const title = document.getElementById('modal-title');
+  const desc = document.getElementById('modal-description');
+  const qty = document.getElementById('modal-qty');
+  const kgLabel = document.getElementById('modal-kg-label');
+  const addBtn = document.getElementById('modal-add-btn');
+  title.textContent = `${translateProductName(modalProduct.name)} (${modalProduct.variety})`;
+  desc.textContent = modalProduct.description ? modalProduct.description[currentLanguage] : '';
+  img.src = modalProduct.images[0];
+  qty.value = 1;
+  if (kgLabel) kgLabel.textContent = `${translations[currentLanguage].kg}:`;
+  addBtn.textContent = translations[currentLanguage].addToCart;
+  modal.style.display = 'flex';
+}
+
+function closeProductModal() {
+  const modal = document.getElementById('product-modal');
+  modal.style.display = 'none';
+  modalProduct = null;
+}
+
+function showModalImage() {
+  if (!modalProduct) return;
+  const img = document.getElementById('modal-image');
+  img.src = modalProduct.images[modalImageIndex];
+}
+
+function nextModalImage() {
+  if (!modalProduct) return;
+  modalImageIndex = (modalImageIndex + 1) % modalProduct.images.length;
+  showModalImage();
+}
+
+function prevModalImage() {
+  if (!modalProduct) return;
+  modalImageIndex = (modalImageIndex - 1 + modalProduct.images.length) % modalProduct.images.length;
+  showModalImage();
+}
+
 // Global productData variable for quick lookup
 let productData = [];
 
 // Fallback products used when products.json cannot be loaded (e.g. when opened via file://)
 const fallbackProducts = [
-  { id: 'plum-opal', category: 'plum', name: 'Plum', variety: 'Opal', price: 50, image: 'plums.jpg' },
-  { id: 'plum-victoria', category: 'plum', name: 'Plum', variety: 'Victoria', price: 55, image: 'plums.jpg' },
-  { id: 'apple-aroma', category: 'apple', name: 'Apple', variety: 'Aroma', price: 40, image: 'apple.jpg' },
-  { id: 'apple-gravenstein', category: 'apple', name: 'Apple', variety: 'Gravenstein', price: 45, image: 'apple.jpg' }
-  , { id: 'eplemost', category: 'juice', name: 'Apple Cider', variety: 'Eplemost', price: 0, image: 'apple.jpg', comingSoon: true }
+  {
+    id: 'plum-opal',
+    category: 'plum',
+    name: 'Plum',
+    variety: 'Opal',
+    price: 50,
+    images: ['https://via.placeholder.com/400x300?text=Plum+Opal+1', 'https://via.placeholder.com/400x300?text=Plum+Opal+2'],
+    description: {
+      en: 'Early ripening plum with sweet, juicy flesh.',
+      no: 'Tidlig modnende plomme med søtt, saftig fruktkjøtt.'
+    }
+  },
+  {
+    id: 'plum-victoria',
+    category: 'plum',
+    name: 'Plum',
+    variety: 'Victoria',
+    price: 55,
+    images: ['https://via.placeholder.com/400x300?text=Plum+Victoria+1', 'https://via.placeholder.com/400x300?text=Plum+Victoria+2'],
+    description: {
+      en: 'Classic plum, sweet and great for desserts.',
+      no: 'Klassisk plomme, søt og fin til desserter.'
+    }
+  },
+  {
+    id: 'apple-aroma',
+    category: 'apple',
+    name: 'Apple',
+    variety: 'Aroma',
+    price: 40,
+    images: ['https://via.placeholder.com/400x300?text=Apple+Aroma+1', 'https://via.placeholder.com/400x300?text=Apple+Aroma+2'],
+    description: {
+      en: 'Fragrant Norwegian apple with crisp bite.',
+      no: 'Aromatisk norsk eple med sprøtt bitt.'
+    }
+  },
+  {
+    id: 'apple-gravenstein',
+    category: 'apple',
+    name: 'Apple',
+    variety: 'Gravenstein',
+    price: 45,
+    images: ['https://via.placeholder.com/400x300?text=Apple+Gravenstein+1', 'https://via.placeholder.com/400x300?text=Apple+Gravenstein+2'],
+    description: {
+      en: 'Traditional heritage apple, tart and aromatic.',
+      no: 'Tradisjonelt arveeple, syrlig og aromatisk.'
+    }
+  },
+  {
+    id: 'eplemost',
+    category: 'juice',
+    name: 'Apple Cider',
+    variety: 'Eplemost',
+    price: 0,
+    images: ['https://via.placeholder.com/400x300?text=Eplemost+1', 'https://via.placeholder.com/400x300?text=Eplemost+2'],
+    comingSoon: true,
+    description: {
+      en: 'Freshly pressed apple cider from our orchard.',
+      no: 'Nypresset eplemost fra vår frukthage.'
+    }
+  }
 ];
 
 // Initial page load
@@ -538,4 +653,19 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
     });
   }
+
+  // modal controls
+  const modal = document.getElementById('product-modal');
+  const closeModalBtn = document.getElementById('close-modal');
+  const prevBtn = document.getElementById('prev-image');
+  const nextBtn = document.getElementById('next-image');
+  const modalAddBtn = document.getElementById('modal-add-btn');
+  if (closeModalBtn) closeModalBtn.addEventListener('click', closeProductModal);
+  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeProductModal(); });
+  if (prevBtn) prevBtn.addEventListener('click', prevModalImage);
+  if (nextBtn) nextBtn.addEventListener('click', nextModalImage);
+  if (modalAddBtn) modalAddBtn.addEventListener('click', () => {
+    const qty = parseFloat(document.getElementById('modal-qty').value);
+    if (modalProduct) addToCart(modalProduct.id, qty);
+  });
 });

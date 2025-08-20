@@ -1,4 +1,4 @@
-# Frukt Finsrud static fruit store
+# Finsrud Frukt static fruit store
 
 This repository contains a simple, multi‑lingual fruit shop for small‑scale farmers.  Customers can browse your current fruit inventory, add items to a shopping cart, review their basket, enter their name and an optional message, and place an order.  After checking out, the site displays a Vipps QR code for payment and sends you an order email via [EmailJS](https://www.emailjs.com/).  Everything runs client‑side, so there’s no need for an expensive app service or Azure Functions.  Host it on any static web host (Azure Storage, GitHub Pages, Netlify, etc.) and use Cloudflare to handle your custom domain and TLS.
 
@@ -11,10 +11,6 @@ frukt_site/
 ├── script.js             # Behaviour – loads products, computes totals and calls the order function
 ├── data/
 │   └── products.json     # List of products (easy to extend)
-├── images/
-│   ├── plums.jpg         # Image of your plums (provided)
-│   ├── apple.jpg         # Image of an apple (from Wikimedia Commons, CC BY 2.0)
-│   └── qr.png            # Your Vipps QR code (provided)
 └── function_app/
     ├── package.json      # (legacy) SendGrid dependency for the Azure Function (no longer needed when using EmailJS)
     └── sendOrder/
@@ -33,11 +29,11 @@ Products are defined in the JSON file under `data/products.json`.  Each entry co
   "name": "Plum",            // display name
   "variety": "Opal",         // variety name
   "price": 50,                // price per kilogram in NOK
-  "image": "plums.jpg"       // image filename in the `images/` folder
+  "images": ["https://example.com/plum1.jpg", "https://example.com/plum2.jpg"] // image URLs
 }
 ```
 
-To add a new product or variety simply append a new object to this file.  Each product can optionally include a boolean `comingSoon` flag and the shop will display it as “Kommer snart / Coming soon” instead of letting customers select a quantity.  When you redeploy the static website, it will automatically pick up any additions.  You can also add corresponding images to the `images/` folder and reference them by filename.
+To add a new product or variety simply append a new object to this file.  Each product can optionally include a boolean `comingSoon` flag and the shop will display it as “Kommer snart / Coming soon” instead of letting customers select a quantity.  When you redeploy the static website, it will automatically pick up any additions.  You can list multiple images for each product by adding image URLs to the `images` array.  A small image shows on the card, and clicking a product opens a gallery with all images and the description.
 
 Customers add items to a cart by entering the desired kilograms and clicking **Add to Cart**.  The **View Cart** button shows how many items are in the basket.  In the cart view, customers can verify the order, see the running total, fill in their name (required), phone and message (both optional) and then submit the order.  After checkout the cart is cleared.
 
@@ -74,7 +70,7 @@ This project uses [EmailJS](https://www.emailjs.com/) to send order notification
 3. **Create an email template** under **Email Templates**.  If you would like a bilingual notification, use a subject such as:
 
    ```
-   New fruit order / Ny fruktbestilling – Frukt Finsrud
+   New fruit order / Ny fruktbestilling – Finsrud Frukt
    ```
 
    And paste the following HTML into the template’s HTML tab (you may customise colours and wording).  This template includes your logo at the top, customer name, phone and optional message, a list of the ordered items and the total in both Norwegian and English:
@@ -82,7 +78,7 @@ This project uses [EmailJS](https://www.emailjs.com/) to send order notification
    ```html
    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
      <div style="text-align: center; padding: 20px;">
-       <img src="https://finsrudfrukt.z6.web.core.windows.net/images/logo.png" alt="Frukt Finsrud" style="max-height: 80px;">
+       <img src="https://finsrudfrukt.z6.web.core.windows.net/images/logo.png" alt="Finsrud Frukt" style="max-height: 80px;">
        <h2>Fruktbestilling / Fruit Order</h2>
      </div>
      <div style="padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
@@ -120,7 +116,7 @@ The site supports both Norwegian (`no`) and English (`en`).  When a visitor load
 
 ## QR code and payments
 
-The QR code in `images/qr.png` is your Vipps payment QR.  It is displayed on the confirmation screen after the customer clicks **Place Order** and the order summary is shown.  The static site does not automatically verify payment; it relies on you receiving the order notification email and checking your Vipps app.  If you change your Vipps QR code you can replace the `qr.png` file in the `images` folder.
+The QR code image is displayed on the confirmation screen after the customer clicks **Place Order** and the order summary is shown.  The static site does not automatically verify payment; it relies on you receiving the order notification email and checking your Vipps app.  Provide a direct image URL to your own Vipps QR code if you wish to replace the placeholder.
 
 ---
 If you run into any issues deploying or extending this site, feel free to adjust the HTML/JavaScript to suit your needs.  The code is deliberately simple so that you can customise it without a complex build process.

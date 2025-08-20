@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Frukt Finsrud</title>
+  <title>Finsrud Frukt</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍎</text></svg>'">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1 id="title">Frukt Finsrud</h1>
+    <h1 id="title">Finsrud Frukt</h1>
     <p id="tagline">Fresh plums and apples from our garden</p>
     <div class="language-switcher">
       <label id="language-label" for="language-select">Language:</label>
@@ -17,6 +19,7 @@
         <option value="en">English</option>
       </select>
     </div>
+    <button id="view-cart-btn" class="cart-button">🛒</button>
   </header>
   <div class="container">
     <section class="product-section">
@@ -24,7 +27,6 @@
       <div class="product-list">
         <!-- Products will be injected here by JavaScript -->
       </div>
-      <button id="view-cart-btn">View Cart</button>
       <div id="message" class="message" style="display:none;"></div>
     </section>
     <section id="order-summary">
@@ -35,7 +37,7 @@
       <p><strong id="total-label">Total:</strong> <span id="total-amount">0</span> NOK</p>
       <div id="qr-code">
         <p id="qr-prompt">Scan the VIPPS QR code to pay</p>
-        <img src="images/qr.png" alt="Vipps QR Code">
+        <img src="https://via.placeholder.com/150?text=QR" alt="Vipps QR Code">
       </div>
     </section>
   </div>
@@ -74,6 +76,23 @@
   </form>
   <!-- EmailJS library -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <div id="product-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <button id="close-modal" class="close">&times;</button>
+      <div class="modal-image-container">
+        <button id="prev-image" class="nav">&#10094;</button>
+        <img id="modal-image" src="" alt="">
+        <button id="next-image" class="nav">&#10095;</button>
+      </div>
+      <h3 id="modal-title"></h3>
+      <p id="modal-description"></p>
+      <div class="modal-actions">
+        <label id="modal-kg-label" for="modal-qty">Kg:</label>
+        <input type="number" id="modal-qty" min="0" step="0.5" value="1">
+        <button id="modal-add-btn"></button>
+      </div>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
