@@ -2,10 +2,11 @@
 
 // EmailJS configuration placeholders. Real values are loaded at runtime from
 // environment variables or an external config.js file (see README for details).
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
-const EMAILJS_CONFIRM_TEMPLATE_ID = 'YOUR_CONFIRM_TEMPLATE_ID';
+const EMAILJS_CONFIRM_TEMPLATE_ID = "template_2hxbfa7";
+const EMAILJS_SERVICE_ID = "service_3lqit3v";
+const EMAILJS_TEMPLATE_ID = "template_26zdx42";
+const EMAILJS_PUBLIC_KEY = "yT9peAZgkN5cJr4lr";
+
 
 const emailJsConfig = Object.assign(
   {
