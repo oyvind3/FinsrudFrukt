@@ -18,18 +18,19 @@
     }
   },
   {
-    "id": "apple-transparent-blanche",
+    "id": "apple-flaskeeple",
     "category": "apple",
     "name": "Apple",
-    "variety": "Transparente Blanche",
-    "price": 40,
-    "image": "transparent1.jpeg",
+    "variety": "Flaskeeple",
+    "price": 45,
+    "image": "flaskeeple2.jpeg",
     "images": [
-      "transparent1.jpeg"
+      "flaskeeple1.jpeg",
+      "flaskeeple2.jpeg"
     ],
     "description": {
-      "en": "Early-season apple with pale yellow skin and tender flesh.",
-      "no": "Tidligmodnende eple med blekgult skall og saftig fruktkjøtt."
+      "no": "Sjelden, dekorativ eplesort med tydelig flaskeform – søt, mild smak.",
+      "en": "Rare and decorative apple variety with a distinct bottle shape – sweet and mild."
     }
   },
   {
